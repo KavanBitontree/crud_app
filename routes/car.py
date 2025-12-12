@@ -9,7 +9,7 @@ router = APIRouter(prefix="/cars", tags=["Cars"])
 # -----------------------------
 # Create a Car
 # -----------------------------
-@router.post("/", response_model=CarResponse, status_code=201)
+@router.post("/create_car", response_model=CarResponse, status_code=201)
 def create_car(car_data: CarCreate, db: Session = Depends(get_db)):
     car = Car(**car_data.model_dump())
     db.add(car)
@@ -20,15 +20,15 @@ def create_car(car_data: CarCreate, db: Session = Depends(get_db)):
 # -----------------------------
 # Get all cars
 # -----------------------------
-@router.get("/", response_model=list[CarResponse])
+@router.get("/get_all_cars", response_model=list[CarResponse])
 def get_all_cars(db: Session = Depends(get_db)):
     return db.query(Car).all()
 
 # -----------------------------
 # Get one car by ID
 # -----------------------------
-@router.get("/{car_id}", response_model=CarResponse)
-def get_car(car_id: int, db: Session = Depends(get_db)):
+@router.get("/get_car_by_id/{car_id}", response_model=CarResponse)
+def get_car_by_id(car_id: int, db: Session = Depends(get_db)):
     car = db.query(Car).filter(Car.id == car_id).first()
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
@@ -37,8 +37,8 @@ def get_car(car_id: int, db: Session = Depends(get_db)):
 # -----------------------------
 # Update car (PUT – replace all fields)
 # -----------------------------
-@router.put("/{car_id}", response_model=CarResponse)
-def update_car(car_id: int, updated: CarCreate, db: Session = Depends(get_db)):
+@router.put("/update_car_by_id/{car_id}", response_model=CarResponse)
+def update_car_by_id(car_id: int, updated: CarCreate, db: Session = Depends(get_db)):
     car = db.query(Car).filter(Car.id == car_id).first()
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
@@ -53,13 +53,13 @@ def update_car(car_id: int, updated: CarCreate, db: Session = Depends(get_db)):
 # -----------------------------
 # PATCH (partial update)
 # -----------------------------
-@router.patch("/{car_id}", response_model=CarResponse)
-def patch_car(car_id: int, updated: CarUpdate, db: Session = Depends(get_db)):
+@router.patch("/patch_car_by_id/{car_id}", response_model=CarResponse)
+def patch_car_by_id(car_id: int, updated: CarUpdate, db: Session = Depends(get_db)):
     car = db.query(Car).filter(Car.id == car_id).first()
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
 
-    data = updated.dict(exclude_unset=True)
+    data = updated.model_dump(exclude_unset=True)
     for key, value in data.items():
         setattr(car, key, value)
 
@@ -70,8 +70,8 @@ def patch_car(car_id: int, updated: CarUpdate, db: Session = Depends(get_db)):
 # -----------------------------
 # Delete a car
 # -----------------------------
-@router.delete("/{car_id}")
-def delete_car(car_id: int, db: Session = Depends(get_db)):
+@router.delete("/delete_car_by_id/{car_id}")
+def delete_car_by_id(car_id: int, db: Session = Depends(get_db)):
     car = db.query(Car).filter(Car.id == car_id).first()
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
