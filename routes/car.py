@@ -62,7 +62,7 @@ def patch_car_by_id(car_id: int, updated: CarUpdate, db: Session = Depends(get_d
     data = updated.model_dump(exclude_unset=True)
     for key, value in data.items():
         setattr(car, key, value)
-
+    
     db.commit()
     db.refresh(car)
     return car

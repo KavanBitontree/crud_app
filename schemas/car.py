@@ -18,3 +18,4 @@ class CarResponse(CarBase):
 
     class Config:
         from_attributes = True
+        

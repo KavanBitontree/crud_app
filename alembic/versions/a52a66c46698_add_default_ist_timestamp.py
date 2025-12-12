@@ -1,8 +1,8 @@
-"""added fuel_entries table
+"""Add default IST timestamp
 
-Revision ID: 522769e0c7bb
-Revises: 4d000d4f3933
-Create Date: 2025-12-12 11:37:55.407952
+Revision ID: a52a66c46698
+Revises: 
+Create Date: 2025-12-12 15:09:04.583557
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '522769e0c7bb'
-down_revision: Union[str, Sequence[str], None] = '4d000d4f3933'
+revision: str = 'a52a66c46698'
+down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
