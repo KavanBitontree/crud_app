@@ -1,14 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import os
-from dotenv import load_dotenv
-load_dotenv()
 
-# Your PostgreSQL URL
-DATABASE_URL = os.getenv("DATABASE_URL")
+from config import DATABASE_URL, DB_ECHO
 
-# Create engine
-engine = create_engine(DATABASE_URL, echo=True)
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, echo=DB_ECHO, connect_args=connect_args)
 
 # SessionLocal class → each request gets its own DB session
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

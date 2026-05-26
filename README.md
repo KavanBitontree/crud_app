@@ -1,8 +1,14 @@
-# CRUD Application with FastAPI and PostgreSQL
+# FastAPI Backend with Auth and CRUD Routes
 
-This is a comprehensive CRUD (Create, Read, Update, Delete) application built with FastAPI and PostgreSQL. The application manages cars and their fuel entries, allowing users to track vehicle information and fuel efficiency.
+This backend provides FastAPI routes for user signup/login plus the existing car and fuel-entry CRUD APIs. It can run with SQLite for local MVP usage or PostgreSQL via `DATABASE_URL`.
 
 ## Features
+
+### Authentication
+- Create users with `POST /signup`
+- Log in with `POST /login`
+- Store salted PBKDF2 password hashes
+- Return a bearer JWT token on successful login
 
 ### Car Management
 - Create, read, update, and delete car records
@@ -14,6 +20,10 @@ This is a comprehensive CRUD (Create, Read, Update, Delete) application built wi
 - Track fuel history per vehicle
 
 ### API Endpoints
+
+#### Auth Routes
+- `POST /signup` - Create a new user
+- `POST /login` - Authenticate a user and return a JWT bearer token
 
 #### Car Routes (`/cars`)
 - `POST /cars/create_car` - Create a new car
@@ -74,11 +84,16 @@ After starting pgAdmin4, access it at `http://localhost:5050` and connect to you
 
 ## Environment Configuration
 
-The application uses a `.env` file for database connection:
+Configuration is read from environment variables, optionally loaded from a local `.env` file:
 
 ```
-DATABASE_URL = "postgresql://postgres:admin123@localhost:5432/cars"
+DATABASE_URL=sqlite:///./app.db
+JWT_SECRET_KEY=replace-with-a-long-random-secret
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+DB_ECHO=false
 ```
+
+For PostgreSQL, set `DATABASE_URL=postgresql://postgres:admin123@localhost:5432/cars`.
 
 ## Dependencies
 
@@ -89,6 +104,8 @@ The project uses the following main dependencies:
 - psycopg2-binary
 - alembic
 - python-dotenv
+- pytest
+- httpx
 
 ## Database Migrations
 
@@ -107,8 +124,18 @@ alembic revision --autogenerate -m "Description of changes"
 ## Running the Application
 
 ```bash
+python -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
 The application will be available at `http://localhost:8000`
 
+Swagger/OpenAPI docs are available at `http://localhost:8000/docs`.
+
+## Running Tests
+
+```bash
+pytest
+```
